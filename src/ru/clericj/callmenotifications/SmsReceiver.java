@@ -31,7 +31,7 @@ public class SmsReceiver extends BroadcastReceiver {
 			// Get received SMS array
 			Object[] smsExtra = (Object[]) extras.get(SMS_EXTRA_NAME);
 
-			// Берём только первую СМС
+			// Р‘РµСЂС‘Рј С‚РѕР»СЊРєРѕ РїРµСЂРІСѓСЋ РЎРњРЎ
 			SmsMessage sms = SmsMessage.createFromPdu((byte[]) smsExtra[0]);
 			InputStream settings = context.getResources().openRawResource(
 					R.raw.parsersettings);
@@ -44,7 +44,7 @@ public class SmsReceiver extends BroadcastReceiver {
 				if (who.isEmpty()) {
 					who = phoneNumber;
 				}
-				String text = "Абонент " + who + " просит перезвонить";
+				String text = "РђР±РѕРЅРµРЅС‚ " + who + " РїСЂРѕСЃРёС‚ РїРµСЂРµР·РІРѕРЅРёС‚СЊ";
 				sendNotification(context, intent, phoneNumber, text);
 				this.abortBroadcast();
 				
@@ -102,7 +102,7 @@ public class SmsReceiver extends BroadcastReceiver {
 				toLaunch, 0);
 
 		notify.flags |= Notification.FLAG_AUTO_CANCEL;
-		notify.setLatestEventInfo(context, text, "Нажимте чтобы перезвонить ("
+		notify.setLatestEventInfo(context, text, "РќР°Р¶РёРјС‚Рµ С‡С‚РѕР±С‹ РїРµСЂРµР·РІРѕРЅРёС‚СЊ ("
 				+ phoneNumber + ")", intentBack);
 
 		notifier.notify(NOTIFY_ID, notify);

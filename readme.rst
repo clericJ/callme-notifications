@@ -10,3 +10,13 @@ CallMeNotifications
  * Удаление сообщения из входящих
 
 .. figure:: https://github.com/clericJ/callme-notifications/raw/master/screenshot.png
+
+
+Поддерживаемые операторы
+------------------------
+ * Мегафон
+ * МТС
+ * Билайн
+ * TELE2
+ * НСС
+

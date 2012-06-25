@@ -19,7 +19,7 @@ import android.provider.ContactsContract;
 import android.telephony.SmsMessage;
 
 public class SmsReceiver extends BroadcastReceiver {
-	public static int NOTIFY_ID = 997711;
+	public static int NOTIFY_ID = 0;
 	public static final String SMS_EXTRA_NAME = "pdus";
 
 	@Override
@@ -106,5 +106,6 @@ public class SmsReceiver extends BroadcastReceiver {
 				+ phoneNumber + ")", intentBack);
 
 		notifier.notify(NOTIFY_ID, notify);
+		NOTIFY_ID += 1;
 	}
 }

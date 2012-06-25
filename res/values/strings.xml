@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Теперь приходящие сообщения с просбой перезвонить будут отображатся в области уведомлений. Сами СМС будут удалятся автоматически</string>
+    <string name="app_name">CallMeNotifications</string>
+
+</resources>

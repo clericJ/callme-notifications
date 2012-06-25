@@ -1,0 +1,30 @@
+<manifest package="ru.clericj.callmenotifications"
+    android:versionCode="1"
+    android:versionName="1.0" xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-sdk android:minSdkVersion="10" ></uses-sdk>
+    <uses-permission android:name="android.permission.WRITE_SMS" />
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.CALL_PHONE"/>
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
+
+    <application
+        android:icon="@drawable/call_black"
+        android:label="@string/app_name" >
+        <activity
+            android:name=".CallMeNotificationsActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <receiver android:name=".SmsReceiver" android:exported="true" >
+            <intent-filter android:priority="1000"> 
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+            </intent-filter> 
+        </receiver>
+    </application>
+
+</manifest>
+

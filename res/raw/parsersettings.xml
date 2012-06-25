@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings>
+    <operator name="Megafon">
+        <match-pattern>(?:Абонент )((:?(:?8|\+7)[\- ]?)?(?:\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10})(:? просит Вас ему перезвонить).*</match-pattern>
+        <use-sender-number>0</use-sender-number>
+    </operator>
+    <operator name="MTS">
+        <match-pattern>Перезвоните мне, пожалуйста.*Отправлено.*</match-pattern>
+        <use-sender-number>1</use-sender-number>
+    </operator>
+    <operator name="Beeline">
+        <match-pattern>Этот абонент просит Вас перезвонить ему.*</match-pattern>
+        <use-sender-number>1</use-sender-number>
+    </operator>
+    <operator name="TELE2">
+        <match-pattern>(?:Вас срочно просит перезвонить абонент )(:?(8|\+7)? ?\(?(\d{3})\)? ?(\d{3})[ -]?(\d{2})[ -]?(\d{2,3})).*</match-pattern>
+        <use-sender-number>0</use-sender-number>
+    </operator>
+    <operator name="NSS">
+        <match-pattern>Пожалуйста, перезвоните мне.*</match-pattern>
+        <use-sender-number>1</use-sender-number>
+    </operator>
+</settings>
+

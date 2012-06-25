@@ -44,7 +44,7 @@ public class SmsReceiver extends BroadcastReceiver {
 				if (who.isEmpty()) {
 					who = phoneNumber;
 				}
-				String text = "Абонент " + who + " просит перезвонить";
+				String text = who + " просит перезвонить";
 				sendNotification(context, intent, phoneNumber, text);
 				this.abortBroadcast();
 				

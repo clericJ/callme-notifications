@@ -18,94 +18,92 @@ import android.provider.BaseColumns;
 import android.provider.ContactsContract;
 import android.telephony.SmsMessage;
 
+
 public class SmsReceiver extends BroadcastReceiver {
-	public static int NOTIFY_ID = 0;
-	public static final String SMS_EXTRA_NAME = "pdus";
+    public static int NOTIFY_ID = 0;
+    public static final String SMS_EXTRA_NAME = "pdus";
 
-	@Override
-	public void onReceive(Context context, Intent intent) {
-		// Get SMS map from Intent
-		Bundle extras = intent.getExtras();
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        Bundle extras = intent.getExtras();
 
-		if (extras != null) {
-			// Get received SMS array
-			Object[] smsExtra = (Object[]) extras.get(SMS_EXTRA_NAME);
+        if (extras != null) {
+            Object[] smsExtra = (Object[]) extras.get(SMS_EXTRA_NAME);
 
-			// Берём только первую СМС
-			SmsMessage sms = SmsMessage.createFromPdu((byte[]) smsExtra[0]);
-			InputStream settings = context.getResources().openRawResource(
-					R.raw.parsersettings);
+            // Берём только первую СМС
+            SmsMessage sms = SmsMessage.createFromPdu((byte[]) smsExtra[0]);
+            InputStream settings = context.getResources().openRawResource(
+                    R.raw.parsersettings);
 
-			SmsParser parser = new SmsParser(sms, settings);
-			if (parser.isCallMeSms()) {
+            SmsParser parser = new SmsParser(sms, settings);
+            if (parser.isCallMeSms()) {
 
-				String phoneNumber = parser.getPhoneNumber();
-				String who = getContactDisplayNameByNumber(context, phoneNumber);
-				if (who.isEmpty()) {
-					who = phoneNumber;
-				}
-				String text = who + " просит перезвонить";
-				sendNotification(context, intent, phoneNumber, text);
-				this.abortBroadcast();
-				
-				playNotificationSound(context);
-			}
-		}
-	}
+                String phoneNumber = parser.getPhoneNumber();
+                String who = getContactDisplayNameByNumber(context, phoneNumber);
+                if (who.isEmpty()) {
+                    who = phoneNumber;
+                }
+                String text = context.getString(R.string.notify_title, who);
+                sendNotification(context, phoneNumber, text);
+                this.abortBroadcast();
 
-	private String getContactDisplayNameByNumber(Context context, String number) {
-		Uri uri = Uri.withAppendedPath(
-				ContactsContract.PhoneLookup.CONTENT_FILTER_URI,
-				Uri.encode(number));
+                playNotificationSound(context);
+            }
+        }
+    }
 
-		String name = "";
-		ContentResolver resolver = context.getContentResolver();
-		Cursor lookup = resolver.query(uri, new String[] { BaseColumns._ID,
-				ContactsContract.PhoneLookup.DISPLAY_NAME }, null, null, null);
+    private String getContactDisplayNameByNumber(Context context, String number) {
+        Uri uri = Uri.withAppendedPath(
+                ContactsContract.PhoneLookup.CONTENT_FILTER_URI,
+                Uri.encode(number));
 
-		try {
-			if (lookup != null && lookup.getCount() > 0) {
-				lookup.moveToNext();
-				name = lookup.getString(lookup
-						.getColumnIndex(ContactsContract.Data.DISPLAY_NAME));
-			}
-		} finally {
-			if (lookup != null) {
-				lookup.close();
-			}
-		}
-		return name;
-	}
+        String name = "";
+        ContentResolver resolver = context.getContentResolver();
+        Cursor lookup = resolver.query(uri, new String[] { BaseColumns._ID,
+                ContactsContract.PhoneLookup.DISPLAY_NAME }, null, null, null);
 
-	private void playNotificationSound(Context context) {
-		Uri soundUri = RingtoneManager
-				.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        try {
+            if (lookup != null && lookup.getCount() > 0) {
+                lookup.moveToNext();
+                name = lookup.getString(lookup
+                        .getColumnIndex(ContactsContract.Data.DISPLAY_NAME));
+            }
+        } finally {
+            if (lookup != null) {
+                lookup.close();
+            }
+        }
+        return name;
+    }
 
-		if (soundUri != null) {
-			Ringtone sound = RingtoneManager.getRingtone(context, soundUri);
-			sound.play();
-		}
-	}
+    private void playNotificationSound(Context context) {
+        Uri soundUri = RingtoneManager
+                .getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
-	private void sendNotification(Context context, Intent intent,
-			String phoneNumber, String text) {
+        if (soundUri != null) {
+            Ringtone sound = RingtoneManager.getRingtone(context, soundUri);
+            sound.play();
+        }
+    }
 
-		Notification notify = new Notification(R.drawable.call_black, text,
-				System.currentTimeMillis());
+    private void sendNotification(Context context, String number, String text) {
 
-		NotificationManager notifier = (NotificationManager) context
-				.getSystemService(Context.NOTIFICATION_SERVICE);
+        Notification notify = new Notification(R.drawable.callback, text,
+                System.currentTimeMillis());
 
-		Intent toLaunch = new Intent(Intent.ACTION_CALL, Uri.parse("tel:"
-				+ phoneNumber));
-		PendingIntent intentBack = PendingIntent.getActivity(context, 0,
-				toLaunch, 0);
+        NotificationManager notifier = (NotificationManager) context
+                .getSystemService(Context.NOTIFICATION_SERVICE);
 
-		notify.flags |= Notification.FLAG_AUTO_CANCEL;
-		notify.setLatestEventInfo(context, text, "Нажимте чтобы перезвонить ("
-				+ phoneNumber + ")", intentBack);
+        Intent toLaunch = new Intent(Intent.ACTION_CALL, Uri.parse("tel:"
+                + number));
+        PendingIntent intentBack = PendingIntent.getActivity(context, 0,
+                toLaunch, 0);
 
-		notifier.notify(NOTIFY_ID, notify);
-		NOTIFY_ID += 1;
-	}
+        notify.flags |= Notification.FLAG_AUTO_CANCEL;
+        notify.setLatestEventInfo(context, text, context.getString(
+                R.string.notify_text, number), intentBack);
+
+        notifier.notify(NOTIFY_ID, notify);
+        NOTIFY_ID += 1;
+    }
 }

@@ -10,8 +10,6 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.BaseColumns;
@@ -47,7 +45,7 @@ public class SmsReceiver extends BroadcastReceiver {
                 sendNotification(context, phoneNumber, text);
                 this.abortBroadcast();
 
-                playNotificationSound(context);
+                //playNotificationSound(context);
             }
         }
     }
@@ -76,16 +74,6 @@ public class SmsReceiver extends BroadcastReceiver {
         return name;
     }
 
-    private void playNotificationSound(Context context) {
-        Uri soundUri = RingtoneManager
-                .getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-
-        if (soundUri != null) {
-            Ringtone sound = RingtoneManager.getRingtone(context, soundUri);
-            sound.play();
-        }
-    }
-
     private void sendNotification(Context context, String number, String text) {
 
         Notification notify = new Notification(R.drawable.callback, text,
@@ -100,6 +88,8 @@ public class SmsReceiver extends BroadcastReceiver {
                 toLaunch, 0);
 
         notify.flags |= Notification.FLAG_AUTO_CANCEL;
+        notify.defaults |= Notification.DEFAULT_SOUND;
+        notify.defaults |= Notification.DEFAULT_VIBRATE;
         notify.setLatestEventInfo(context, text, context.getString(
                 R.string.notify_text, number), intentBack);
 

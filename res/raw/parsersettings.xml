@@ -17,7 +17,7 @@
         <use-sender-number>0</use-sender-number>
     </operator>
     <operator name="NSS">
-        <match-pattern>Пожалуйста, перезвоните мне.*</match-pattern>
+        <match-pattern>Пожалуйста, перезвоните мне</match-pattern>
         <use-sender-number>1</use-sender-number>
     </operator>
 </settings>

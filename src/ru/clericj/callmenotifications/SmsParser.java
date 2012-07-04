@@ -62,7 +62,7 @@ public class SmsParser {
                     if (match.find()) {
                         isCallMeSmsFlag = true;
 
-                        if (useSenderNumber != 0) {
+                        if (!useSenderNumber.equals(0)) {
                             subscriberPhoneNumber = fromNumber;
                         } else {
                             // При составлении регулярного выражения, для
